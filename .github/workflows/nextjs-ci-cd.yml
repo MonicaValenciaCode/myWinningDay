@@ -1,12 +1,12 @@
- name: Next.js CI/CD Pipeline
+name: Next.js CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main  # Trigger on pushes to the main branch
+      - main # Trigger on pushes to the main branch
   pull_request:
     branches:
-      - main  # Trigger on pull requests to the main branch
+      - main # Trigger on pull requests to the main branch
 
 jobs:
   build-and-deploy:
@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16  # Use the Node.js version compatible with Next.js
+          node-version: 18
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -39,8 +39,7 @@ jobs:
       - name: Build the app
         run: npm run build
 
-      # Step 7: Deploy to Vercel or Other Hosting
-      # For Vercel:
+      # Step 7: Deploy to Vercel
       - name: Deploy to Vercel
         run: npx vercel --prod
         env:
