@@ -31,12 +31,16 @@ jobs:
         run: npm install
 
       # Step 4: Run lint checks
-      - name: Lint code
-        run: npm run lint
+      # - name: Lint code
+      #   run: npm run lint
 
-      # Step 5: Run tests
-      - name: Run tests
-        run: npm test
+      # Step 5: Run tests and coverage checks
+      # - name: Run tests and check coverage
+      #   run: npm run test && npm run coverage-check
+
+      # Steps 4 & 5 in 1 step
+      - name: Validate code quality
+        run: npm run validate
 
       # Step 6: Build the Next.js app
       - name: Build the app
@@ -44,4 +48,5 @@ jobs:
 
       # Step 7: Deploy to Vercel
       - name: Deploy to Vercel
+        if: ${{ success() }} # Ensure deployment only happens if previous steps pass
         run: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
