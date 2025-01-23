@@ -15,3 +15,10 @@ out/
 # Logs
 logs/
 *.log
+
+# Ignore build artifacts
+.next/
+node_modules/
+build/
+dist/
+
