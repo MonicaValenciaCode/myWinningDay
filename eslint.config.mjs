@@ -9,21 +9,24 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-export default [
-  // Ignore configuration block
+// Assign the configuration array to a named variable
+const eslintConfig = [
   {
     ignores: [
-      ".next/**", // Ignore all .next files
+      ".next/**", // Ignore build artifacts
       "node_modules/**", // Ignore node_modules
-      "build/**", // Ignore build artifacts
-      "dist/**", // Ignore dist directory
+      "build/**", // Ignore build
+      "dist/**", // Ignore dist
     ],
   },
   {
-    files: ["**/*.{js,jsx,ts,tsx}"], // Lint source files
+    files: ["**/*.{js,jsx,ts,tsx}"], // Target source files
   },
   ...compat.extends(
     "next/core-web-vitals", // Core Web Vitals rules
     "next" // General Next.js rules
   ),
 ];
+
+// Export the variable as the default export
+export default eslintConfig;

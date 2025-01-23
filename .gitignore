@@ -22,3 +22,8 @@ node_modules/
 build/
 dist/
 
+# Ignore coverage reports
+*.lcov
+coverage/
+
+
