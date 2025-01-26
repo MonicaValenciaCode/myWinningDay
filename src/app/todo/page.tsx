@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 type Task = {
     id: number;
@@ -10,25 +10,41 @@ type Task = {
 
 export default function TodoApp() {
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [task, setTask] = useState<string>('');
+    const [task, setTask] = useState<string>("");
 
-    const addTask = (): void => {
-        if (task.trim() === '') return;
-        setTasks([...tasks, { id: Date.now(), text: task, completed: false }]);
-        setTask('');
-    };
+    // Add task function with memoization
+    const addTask = useCallback((): void => {
+        const trimmedTask = task.trim();
+        if (!trimmedTask) return;
 
-    const toggleTaskCompletion = (id: number): void => {
-        setTasks(
-            tasks.map((t) =>
+        // Prevent duplicates
+        const isDuplicate = tasks.some((t) => t.text.toLowerCase() === trimmedTask.toLowerCase());
+        if (isDuplicate) {
+            alert("Task already exists!");
+            return;
+        }
+
+        // Add task
+        setTasks((prevTasks) => [
+            ...prevTasks,
+            { id: Date.now(), text: trimmedTask, completed: false },
+        ]);
+        setTask("");
+    }, [task, tasks]);
+
+    // Toggle task completion with memoization
+    const toggleTaskCompletion = useCallback((id: number): void => {
+        setTasks((prevTasks) =>
+            prevTasks.map((t) =>
                 t.id === id ? { ...t, completed: !t.completed } : t
             )
         );
-    };
+    }, []);
 
-    const deleteTask = (id: number): void => {
-        setTasks(tasks.filter((t) => t.id !== id));
-    };
+    // Delete task function with memoization
+    const deleteTask = useCallback((id: number): void => {
+        setTasks((prevTasks) => prevTasks.filter((t) => t.id !== id));
+    }, []);
 
     return (
         <div className="max-w-md mx-auto p-4">
@@ -40,6 +56,7 @@ export default function TodoApp() {
                     placeholder="Add a new task..."
                     value={task}
                     onChange={(e) => setTask(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && addTask()} // Allow pressing Enter to add
                 />
                 <button
                     className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
@@ -50,9 +67,12 @@ export default function TodoApp() {
             </div>
             <ul>
                 {tasks.map((t) => (
-                    <li key={t.id} className="flex items-center justify-between p-2 border-b">
+                    <li
+                        key={t.id}
+                        className="flex items-center justify-between p-2 border-b"
+                    >
                         <span
-                            className={`flex-grow cursor-pointer ${t.completed ? 'line-through text-gray-500' : ''
+                            className={`flex-grow cursor-pointer ${t.completed ? "line-through text-gray-500" : ""
                                 }`}
                             onClick={() => toggleTaskCompletion(t.id)}
                         >
