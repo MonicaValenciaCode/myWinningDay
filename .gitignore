@@ -26,4 +26,6 @@ dist/
 *.lcov
 coverage/
 
-
+# Cypress-generated folders
+cypress/videos/
+cypress/screenshots/
